@@ -6,6 +6,8 @@
     <title>Congratulations Kamal</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://run.confettipage.com/here.js" data-confetticode="U2FsdGVkX1/eRAK5OwExHXKq/5BA+qz9iNN1eH+/kbLNvRVr2ayaQWt18tseWATyN/XhTRSRJaabaN/l5S1yR42j+QrZ4FjYeKGevewb8jIWkSegWT/aAB5cJ96cpUnBxpGyzPsKWmQXUOIyWtuno+YkmPhJA1golnLjrv/MgkVe2zLYaiM6KM/EBbT4Z1epyXKkSOhFNJlxm+916RHy67lZV2jcT1l2hMbKgkxztMexyFeP+OubOeRFi4syEksVooNkeysUyp9+zk12WCZE7+e+C2AubHvMOeAGgVp8sGJqxhXPWKFpPXyZniYUEniaKVDfhaqUV0RzwaTlhg/qW1M3TgZenhk62eBZCBUc44jwpfwMDXV2eWMGilFM9vFmCGW3HiJBdgdD3LzJVEF3xVrD8HoP/6NGnwHvhqRLOQcGmXhBMb+3xm65gk+gDq3la6NxXPeB9J2faS7oAMyVBNl8jFiIcYs8g8ZfQOyl+uayKnH5tkQgjxddrqfAt5bYMfvrWmOvfZkMFyNvDjM2+58+/W0hAOdjQGYOwG/1oKcYQIFtR/+s3J1XUgFghNwkYEK9ec35Zqsl14ngySVJy/uxGQUtlk6zk6uH46EgFuQ="></script>
+
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -73,76 +75,18 @@
     </div>
 
 <script>
-var confettea = {
-    options: {
-        particleCount: 100,
-        spread: 60,
-        origin: { x: 0.5, y: 0.5 },
-        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'],
-        ticks: 300,
-        gravity: 0.8,
-        decay: 0.95,
-        startVelocity: 30,
-        shapes: ['square', 'circle'],
-        scalar: 1
-    },
-
-    burst: function() {
-        const count = this.options.particleCount;
-        const angle = 360 / count;
-        const particles = [];
-
-        for (let i = 0; i < count; i++) {
-            const xVelocity = this.options.startVelocity * Math.cos(angle * i);
-            const yVelocity = this.options.startVelocity * Math.sin(angle * i);
-
-            const particle = document.createElement('div');
-            particle.style.position = 'fixed';
-            particle.style.backgroundColor = this.options.colors[Math.floor(Math.random() * this.options.colors.length)];
-            particle.style.top = `${this.options.origin.y * window.innerHeight}px`;
-            particle.style.left = `${this.options.origin.x * window.innerWidth}px`;
-            particle.style.width = '10px';
-            particle.style.height = '10px';
-            particle.style.borderRadius = '50%';
-            particle.style.pointerEvents = 'none';
-
-            document.body.appendChild(particle);
-
-            particles.push({
-                element: particle,
-                xVelocity: xVelocity,
-                yVelocity: yVelocity,
-                decay: this.options.decay,
-                gravity: this.options.gravity
-            });
+    function triggerConfetti() {
+        // Check if the confetti script provides a global function to call
+        if (typeof window.someGlobalConfettiFunction === 'function') {
+            window.someGlobalConfettiFunction();
+        } else {
+            // If no function is provided, this could mean that the script auto-initializes
+            // or requires some other form of activation which isn't documented here.
+            console.log('The confetti effect cannot be triggered because the required function is undefined.');
         }
-
-        function update() {
-            particles.forEach(p => {
-                p.yVelocity += p.gravity;
-                p.xVelocity *= p.decay;
-                p.yVelocity *= p.decay;
-
-                p.element.style.left = `${parseInt(p.element.style.left) + p.xVelocity}px`;
-                p.element.style.top = `${parseInt(p.element.style.top) + p.yVelocity}px`;
-            });
-
-            if (confettea.options.ticks > 0) {
-                requestAnimationFrame(update);
-                confettea.options.ticks--;
-            } else {
-                particles.forEach(p => p.element.remove());
-            }
-        }
-
-        update();
     }
-};
-
-function makeItRain() {
-    confettea.burst();
-}
 </script>
+
 
         
 </body>
