@@ -6,7 +6,6 @@
     <title>Congratulations Kamal</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -24,12 +23,11 @@
             border-radius: 25px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 85%; /* Reduced from 90% */
-            max-width: 380px; /* Reduced from 400px */
+            width: 85%;
+            max-width: 380px;
             text-align: center;
-            margin: 0 auto; /* Centers the container horizontally */
+            margin: 0 auto;
         }
-
         h1 {
             font-family: 'Great Vibes', cursive;
             color: gold;
@@ -62,24 +60,90 @@
                 transform: translateY(-15px);
             }
         }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
+    <canvas></canvas>
     <div class="container">
         <img id="trophy" src="trophy.png" alt="Trophy">
         <h1>Congratulations</h1>
         <p class="name">Kamal</p>
         <p>Baki de congratulations GPA uhn toh bdh, jede ke 100% aauge</p>
-        <button onclick="triggerConfetti()">Celebrate!</button>
+        <button onclick="startConfetti()">Celebrate!</button>
     </div>
-    
-    <script src="https://run.confettipage.com/here.js" data-confetticode="U2FsdGVkX1/eRAK5OwExHXKq/5BA+qz9iNN1eH+/kbLNvRVr2ayaQWt18tseWATyN/XhTRSRJaabaN/l5S1yR42j+QrZ4FjYeKGevewb8jIWkSegWT/aAB5cJ96cpUnBxpGyzPsKWmQXUOIyWtuno+YkmPhJA1golnLjrv/MgkVe2zLYaiM6KM/EBbT4Z1epyXKkSOhFNJlxm+916RHy67lZV2jcT1l2hMbKgkxztMexyFeP+OubOeRFi4syEksVooNkeysUyp9+zk12WCZE7+e+C2AubHvMOeAGgVp8sGJqxhXPWKFpPXyZniYUEniaKVDfhaqUV0RzwaTlhg/qW1M3TgZenhk62eBZCBUc44jwpfwMDXV2eWMGilFM9vFmCGW3HiJBdgdD3LzJVEF3xVrD8HoP/6NGnwHvhqRLOQcGmXhBMb+3xm65gk+gDq3la6NxXPeB9J2faS7oAMyVBNl8jFiIcYs8g8ZfQOyl+uayKnH5tkQgjxddrqfAt5bYMfvrWmOvfZkMFyNvDjM2+58+/W0hAOdjQGYOwG/1oKcYQIFtR/+s3J1XUgFghNwkYEK9ec35Zqsl14ngySVJy/uxGQUtlk6zk6uH46EgFuQ="></script>
 
     <script>
-        function triggerConfetti() {
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
 
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        function startConfetti() {
+            particles = [];
+            for (let i = 0; i < 400; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 4 + 1,
+                    d: Math.random() * 400,
+                    color: `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.random().toFixed(2)})`,
+                    tilt: Math.random() * 10 - 10,
+                    tiltAngleIncremental: 0.07 * Math.random() + 0.05,
+                    tiltAngle: 0
+                });
+            }
+            requestAnimationFrame(updateConfetti);
+        }
+
+        function updateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                ctx.beginPath();
+                ctx.lineWidth = p.r;
+                ctx.strokeStyle = p.color;
+                ctx.moveTo(p.x + p.tilt, p.y);
+                ctx.lineTo(p.x + p.tilt + p.r, p.y + p.tilt);
+                ctx.stroke();
+
+                p.tiltAngle += p.tiltAngleIncremental;
+                p.y += Math.sin(p.d) + 3 + p.r / 2;
+                p.tilt = Math.sin(p.tiltAngle - (index / 3)) * 15;
+
+                if (p.y > canvas.height) {
+                    particles[index] = {
+                        x: Math.random() * canvas.width,
+                        y: -10,
+                        r: p.r,
+                        d: p.d,
+                        color: p.color,
+                        tilt: p.tilt,
+                        tiltAngleIncremental: p.tiltAngleIncremental,
+                        tiltAngle: p.tiltAngle
+                    };
+                }
+            });
+            if (particles.length > 0) {
+                requestAnimationFrame(updateConfetti);
+            }
         }
     </script>
+</body>
+</html>
 
 
         
