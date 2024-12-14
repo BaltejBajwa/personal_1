@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congratulations Kamal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(90deg, #4c8479, #2b5f56);
+        }
+        .container {
+            background-color: #2b524a;
+            color: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            color: gold;
+            margin: 20px 0;
+            font-size: 56px;
+        }
+        .name {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 42px;
+            margin: 15px 0;
+        }
+        p {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 20px;
+            margin: 15px 0;
+        }
+        #trophy {
+            max-width: 80%;
+            height: auto;
+            animation: bounce 1.5s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="trophy" src="trophy.png" alt="Trophy">
+        <h1>Congratulations</h1>
+        <p class="name">Kamal</p>
+        <p>Baki de congratulations GPA uhn toh bdh, jede ke 100% aauge</p>
+        <button onclick="makeItRain()">Celebrate!</button>
+    </div>
+
+    <script>
+        var confettea = {
+            options: {
+                particleCount: 100, // Number of particles to create
+                spread: 60, // Angle in degrees to spread from the origin
+                origin: { x: 0.5, y: 0.5 }, // Origin for the confetti burst
+                colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'], // Color options
+                ticks: 300, // Duration of the burst in frames
+                gravity: 0.8, // Gravity to apply to particles
+                decay: 0.95, // Decay to apply to particles
+                startVelocity: 30, // Starting velocity of particles
+                shapes: ['square', 'circle'], // Shape options
+                scalar: 1, // Scale factor for all particles
+                emojis: [], // Emoji options
+                images: [], // Image options
+                svgs: [] // SVG options
+            },
+            // Function to generate a random number between a range
+            randomInRange: function(min, max) {
+                return Math.random() * (max - min) + min;
+            },
+            // Function to create elements for the particles
+            createElements: function(root, elementCount, options) {
+                var elements = [];
+                var shapeTypes = ['color', 'emoji', 'image', 'svg'];
+                var shapeCount = shapeTypes.reduce((acc, type) => 
+                    acc + (type === 'color' ? options.shapes.length : options[type + 's'].length), 0);
+        
+                for (var i = 0; i < elementCount; i++) {
+                    var element = document.createElement('div');
+                    element.style.position = 'fixed';
+                    element.style.top = '0';
+                    element.style.left = '0';
+                    element.style.width = element.style.height = '10px';
+                    element.style.pointerEvents = 'none';
+                    element.style.opacity = '0';
+        
+                    var shapeIndex = Math.floor(Math.random() * shapeCount);
+                    var currentCount = 0;
+        
+                    for (var j = 0; j < shapeTypes.length; j++) {
+                        var type = shapeTypes[j];
+                        var typeCount = type === 'color' ? options.shapes.length : options[type + 's'].length;
+                        
+                        if (shapeIndex < currentCount + typeCount) {
+                            if (type === 'color') {
+                                var colorIndex = shapeIndex - currentCount;
+                                var shape = options.shapes[colorIndex];
+                                var color = options.colors[Math.floor(Math.random() * options.colors.length)];
+                                element.style.backgroundColor = color;
+                                element.style.borderRadius = shape === 'circle' ? '50%' : '0';
+                            } else if (type === 'emoji') {
+                                var emojiIndex = shapeIndex - currentCount;
+                                element.innerHTML = options.emojis[emojiIndex];
+                                element.style.fontSize = '20px';
+                                element.style.display = 'flex';
+                                element.style.alignItems = 'center';
+                                element.style.justifyContent = 'center';
+                            } else if (type === 'image' || type === 'svg') {
+                                var imgIndex = shapeIndex - currentCount;
+                                var img = document.createElement('img');
+                                img.src = options[type + 's'][imgIndex];
+                                img.style.width = img.style.height = '100%';
+                                img.style.objectFit = 'contain';
+                                element.appendChild(img);
+                            }
+                            break;
+                        }
+                        currentCount += typeCount;
+                    }
+        
+                    root.appendChild(element);
+                    elements.push(element);
+                }
+                return elements;
+            },
+            // Function to create a confetti burst
+            burst: function(customOptions) {
+                var opts = Object.assign({}, this.options, customOptions);
+                var root = document.body;
+                var elements = this.createElements(root, opts.particleCount, opts);
+                var particles = elements.map(el => ({
+                    element: el,
+                    physics: {
+                        x: opts.origin.x * window.innerWidth,
+                        y: opts.origin.y * window.innerHeight,
+                        vx: Math.cos(this.randomInRange(0, 2 * Math.PI)) * opts.startVelocity,
+                        vy: Math.sin(this.randomInRange(0, 2 * Math.PI)) * opts.startVelocity * -1,
+                        vz: 0
+                    }
+                }));
+        
+                function animate() {
+                    particles.forEach(p => {
+                        p.physics.vx *= opts.decay;
+                        p.physics.vy *= opts.decay;
+                        p.physics.vy += opts.gravity;
+                        p.physics.x += p.physics.vx;
+                        p.physics.y += p.physics.vy;
+        
+                        p.element.style.transform = `translate3d(${p.physics.x}px, ${p.physics.y}px, ${p.physics.vz}px)`;
+                        p.element.style.opacity -= 0.04;
+        
+                        if (p.physics.y > window.innerHeight || p.element.style.opacity <= 0) {
+                            p.element.remove();
+                            particles.splice(particles.indexOf(p), 1);
+                        }
+                    });
+        
+                    if (particles.length > 0) {
+                        requestAnimationFrame(animate);
+                    }
+                }
+        
+                requestAnimationFrame(animate);
+            }
+        };
+        
+        function makeItRain() {
+            confettea.burst({
+                particleCount: 100,
+                spread: 70
+            });
+        }
+        </script>
+        
+</body>
+</html>
